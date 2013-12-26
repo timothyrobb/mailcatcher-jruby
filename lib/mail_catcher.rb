@@ -3,9 +3,9 @@ require 'eventmachine'
 require 'open3'
 require 'optparse'
 require 'rbconfig'
-require 'thin'
+#require 'thin'
 
-require 'mail_catcher/version'
+require_relative 'mail_catcher/version'
 
 module MailCatcher extend self
   def which command
@@ -52,7 +52,8 @@ module MailCatcher extend self
     :http_ip => '127.0.0.1',
     :http_port => '1080',
     :verbose => false,
-    :daemon => !windows?,
+    :daemon => false,
+    #:daemon => !windows?,
     :growl => growlnotify?,
     :browse => false,
     :quit => true,
@@ -144,7 +145,7 @@ module MailCatcher extend self
 
     puts "Starting MailCatcher"
 
-    Thin::Logging.silent = true
+    #Thin::Logging.silent = true
 
     # One EventMachine loop...
     EventMachine.run do
@@ -163,7 +164,7 @@ module MailCatcher extend self
       # Let Thin set itself up inside our EventMachine loop
       # (Skinny/WebSockets just works on the inside)
       rescue_port options[:http_port] do
-        Thin::Server.start options[:http_ip], options[:http_port], Web
+        #Thin::Server.start options[:http_ip], options[:http_port], Web
         puts "==> #{http_url}"
       end
 
@@ -182,7 +183,7 @@ module MailCatcher extend self
           else
             puts "*** MailCatcher is now running as a daemon that cannot be quit."
           end
-          Process.daemon
+          #Process.daemon
         end
       end
     end
@@ -210,8 +211,12 @@ protected
   end
 end
 
-require 'mail_catcher/events'
-require 'mail_catcher/growl'
-require 'mail_catcher/mail'
-require 'mail_catcher/smtp'
-require 'mail_catcher/web'
+require_relative 'mail_catcher/events'
+require_relative 'mail_catcher/growl'
+require_relative 'mail_catcher/mail'
+require_relative 'mail_catcher/smtp'
+require_relative 'mail_catcher/web'
+
+
+
+MailCatcher.run!

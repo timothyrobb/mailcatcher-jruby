@@ -3,10 +3,10 @@ require 'pathname'
 require 'net/http'
 require 'uri'
 
-require 'skinny'
+#require 'skinny'
 
 class Sinatra::Request
-  include Skinny::Helpers
+  #include Skinny::Helpers
 end
 
 class MailCatcher::Web < Sinatra::Base

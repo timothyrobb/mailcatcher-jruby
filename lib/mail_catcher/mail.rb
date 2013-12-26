@@ -1,12 +1,14 @@
 require 'active_support/json'
+require 'active_record'
 require 'mail'
-require 'sqlite3'
+#require 'sqlite3'
 require 'eventmachine'
 
 module MailCatcher::Mail extend self
   def db
     @__db ||= begin
-      SQLite3::Database.new(':memory:', :type_translation => true).tap do |db|
+      ActiveRecord::Base.establish_connection(adapter: 'jdbcsqlite3', database: ':memory:').connection.raw_connection.tap do |db|
+      #SQLite3::Database.new(':memory:', :type_translation => true).tap do |db|
         db.execute(<<-SQL)
           CREATE TABLE message (
             id INTEGER PRIMARY KEY ASC,
