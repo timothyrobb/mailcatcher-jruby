@@ -2,6 +2,7 @@ require 'sinatra'
 require 'pathname'
 require 'net/http'
 require 'uri'
+require 'haml'
 #require 'skinny'
 
 
