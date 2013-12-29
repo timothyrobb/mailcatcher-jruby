@@ -3,5 +3,6 @@
 require 'puma/cli'
 
 rack_path = File.expand_path('../../config.ru', __FILE__)
-cli = Puma::CLI.new ([rack_path] + ARGV)
+default_params = ARGV.include?('-p') ? [rack_path] : [rack_path, '-p', '9090']
+cli = Puma::CLI.new (default_params + ARGV)
 cli.run
