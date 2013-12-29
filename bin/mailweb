@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'puma/cli'
+
+rack_path = File.expand_path('../../config.ru', __FILE__)
+cli = Puma::CLI.new ([rack_path] + ARGV)
+cli.run

@@ -22,7 +22,7 @@ class MailCatcher
     $('#message .views .analysis.tab a').live 'click', (e) =>
       e.preventDefault()
       @loadMessageAnalysis @selectedMessage()
-      
+
     $('#message iframe').load =>
       @decorateMessageBody()
 
@@ -180,7 +180,7 @@ class MailCatcher
     $('#messages tbody').prepend \
       $('<tr />').attr('data-message-id', message.id.toString())
         .append($('<td/>').text(message.sender or "No sender").toggleClass("blank", !message.sender))
-        .append($('<td/>').text((message.recipients || []).join(', ') or "No receipients").toggleClass("blank", !message.recipients.length))
+        .append($('<td/>').text((message.recipients || []).join(', ') or "No recipients").toggleClass("blank", !message.recipients.length))
         .append($('<td/>').text(message.subject or "No subject").toggleClass("blank", !message.subject))
         .append($('<td/>').text @formatDate message.created_at)
 
@@ -210,6 +210,8 @@ class MailCatcher
       @scrollToRow(messageRow)
 
       $.getJSON "/messages/#{id}.json", (message) =>
+        # change recipients to array
+        message.recipients = JSON.parse(message.recipients) if message.recipients?
         $('#message .metadata dd.created_at').text @formatDate message.created_at
         $('#message .metadata dd.from').text message.sender
         $('#message .metadata dd.to').text (message.recipients || []).join(', ')
@@ -260,8 +262,8 @@ class MailCatcher
 
   decorateMessageBody: ->
     format = $('#message .views .tab.format.selected').attr 'data-message-format'
-          
-    switch format 
+
+    switch format
       when 'html'
         body = $('#message iframe').contents().find('body')
         $("a", body).attr("target", "_blank")
@@ -309,6 +311,8 @@ class MailCatcher
     $.getJSON '/messages', (messages) =>
       $.each messages, (i, message) =>
         unless @haveMessage message
+          # change recipients to array
+          message.recipients = JSON.parse(message.recipients) if message.recipients?
           @addMessage message
 
   subscribe: ->

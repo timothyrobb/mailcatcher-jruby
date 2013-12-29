@@ -4,20 +4,23 @@ require 'mail'
 #require 'sqlite3'
 require 'eventmachine'
 
-DB_CONF = { adapter: 'jdbcsqlite3', database: ':memory:' }
+ActiveRecord::Base.configurations["db"] = { adapter: 'jdbcsqlite3', database: 'db', pool: 20 }
 
 class Message < ActiveRecord::Base
-  establish_connection DB_CONF
+  establish_connection :db
   has_many :message_parts, dependent: :destroy
+  self.inheritance_column = nil
 
   def recipients
-    self.recipient &&= ActiveSupport::JSON.decode self.recipients
+    self[:recipients] &&= [ActiveSupport::JSON.decode(self[:recipients])].flatten!
   end
 end
 class MessagePart < ActiveRecord::Base
-  establish_connection DB_CONF
+  establish_connection :db
   belongs_to :message
+  self.inheritance_column = nil
 end
+
 
 Message.connection.create_table :messages do |t|
   t.text :sender
@@ -28,7 +31,8 @@ Message.connection.create_table :messages do |t|
   t.text :type
 
   t.timestamps
-end
+end unless Message.table_exists?
+
 MessagePart.connection.create_table :message_parts do |t|
   t.integer :message_id
   t.text :cid
@@ -38,7 +42,7 @@ MessagePart.connection.create_table :message_parts do |t|
   t.text :charset
   t.binary :body
   t.integer :size
-end
+end unless MessagePart.table_exists?
 
 module MailCatcher::Mail extend self
 
@@ -57,8 +61,6 @@ module MailCatcher::Mail extend self
       size: message[:source].length
     )
 
-    puts Message.all
-    puts MessagePart.all
     #message_id = db.last_insert_row_id
     message_id = m.id
     parts = mail.all_parts

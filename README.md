@@ -1,4 +1,33 @@
+# MailCatcher for JRuby
+
+## Usage for JRuby on Rails.
+
+1. `gem install mailcatcher-jruby`
+
+2. Start the smpt server at port 9000
+`mailcatcher`
+
+use `--smtp-port 1080` to change the port to 1080
+
+3. Start Puma rack server to host web pages of emails at port 9090.
+`mailweb`
+add `-p 1080` to use port 1080
+
+Open [http://127.0.0.1:9090](http://127.0.0.1:9090) to see emails.
+
+
+4. Configure rails.
+To set up your rails app, I recommend adding this to your `environment/development.rb`:
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = { :address => "127.0.0.1", :port =>
+    9000 }
+
+
+# Original Documentation
+
 # MailCatcher
+
 
 Catches mail and serves it through a dream.
 

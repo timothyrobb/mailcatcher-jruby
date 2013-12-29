@@ -47,8 +47,8 @@ module MailCatcher extend self
   end
 
   @@defaults = {
-    :smtp_ip => '127.0.0.1',
-    :smtp_port => '1025',
+    :smtp_ip => '0.0.0.0',
+    :smtp_port => '9000',
     :http_ip => '127.0.0.1',
     :http_port => '1080',
     :verbose => false,
@@ -60,7 +60,7 @@ module MailCatcher extend self
   }
 
   def options
-    @@options
+    @@options rescue @@defaults
   end
 
   def quittable?
@@ -163,10 +163,10 @@ module MailCatcher extend self
 
       # Let Thin set itself up inside our EventMachine loop
       # (Skinny/WebSockets just works on the inside)
-      rescue_port options[:http_port] do
+      # rescue_port options[:http_port] do
         #Thin::Server.start options[:http_ip], options[:http_port], Web
-        puts "==> #{http_url}"
-      end
+        # puts "==> #{http_url}"
+      # end
 
       # Open the web browser before detatching console
       if options[:browse]
@@ -217,6 +217,4 @@ require_relative 'mail_catcher/mail'
 require_relative 'mail_catcher/smtp'
 require_relative 'mail_catcher/web'
 
-
-
-MailCatcher.run!
+# MailCatcher.run!

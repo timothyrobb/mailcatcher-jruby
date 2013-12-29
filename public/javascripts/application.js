@@ -249,7 +249,7 @@
     };
 
     MailCatcher.prototype.addMessage = function(message) {
-      return $('#messages tbody').prepend($('<tr />').attr('data-message-id', message.id.toString()).append($('<td/>').text(message.sender || "No sender").toggleClass("blank", !message.sender)).append($('<td/>').text((message.recipients || []).join(', ') || "No receipients").toggleClass("blank", !message.recipients.length)).append($('<td/>').text(message.subject || "No subject").toggleClass("blank", !message.subject)).append($('<td/>').text(this.formatDate(message.created_at))));
+      return $('#messages tbody').prepend($('<tr />').attr('data-message-id', message.id.toString()).append($('<td/>').text(message.sender || "No sender").toggleClass("blank", !message.sender)).append($('<td/>').text((message.recipients || []).join(', ') || "No recipients").toggleClass("blank", !message.recipients.length)).append($('<td/>').text(message.subject || "No subject").toggleClass("blank", !message.subject)).append($('<td/>').text(this.formatDate(message.created_at))));
     };
 
     MailCatcher.prototype.scrollToRow = function(row) {
@@ -286,6 +286,9 @@
         this.scrollToRow(messageRow);
         return $.getJSON("/messages/" + id + ".json", function(message) {
           var $ul;
+          if (message.recipients != null) {
+            message.recipients = JSON.parse(message.recipients);
+          }
           $('#message .metadata dd.created_at').text(_this.formatDate(message.created_at));
           $('#message .metadata dd.from').text(message.sender);
           $('#message .metadata dd.to').text((message.recipients || []).join(', '));
@@ -373,6 +376,9 @@
       return $.getJSON('/messages', function(messages) {
         return $.each(messages, function(i, message) {
           if (!_this.haveMessage(message)) {
+            if (message.recipients != null) {
+              message.recipients = JSON.parse(message.recipients);
+            }
             return _this.addMessage(message);
           }
         });

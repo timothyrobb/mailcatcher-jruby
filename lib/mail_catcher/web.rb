@@ -2,8 +2,8 @@ require 'sinatra'
 require 'pathname'
 require 'net/http'
 require 'uri'
-
 #require 'skinny'
+
 
 class Sinatra::Request
   #include Skinny::Helpers
@@ -27,17 +27,17 @@ class MailCatcher::Web < Sinatra::Base
   end
 
   get '/messages' do
-    if request.websocket?
-      request.websocket!(
-        :on_start => proc do |websocket|
-          subscription = MailCatcher::Events::MessageAdded.subscribe { |message| websocket.send_message message.to_json }
-          websocket.on_close do |websocket|
-            MailCatcher::Events::MessageAdded.unsubscribe subscription
-          end
-        end)
-    else
+    # if request.websocket?
+    #   request.websocket!(
+    #     :on_start => proc do |websocket|
+    #       subscription = MailCatcher::Events::MessageAdded.subscribe { |message| websocket.send_message message.to_json }
+    #       websocket.on_close do |websocket|
+    #         MailCatcher::Events::MessageAdded.unsubscribe subscription
+    #       end
+    #     end)
+    # else
       MailCatcher::Mail.messages.to_json
-    end
+    # end
   end
 
   delete '/messages' do
