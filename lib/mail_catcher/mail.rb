@@ -3,8 +3,11 @@ require 'active_record'
 require 'mail'
 #require 'sqlite3'
 require 'eventmachine'
+require 'tmpdir'
 
-ActiveRecord::Base.configurations["db"] = { adapter: 'jdbcsqlite3', database: 'db', pool: 20 }
+db_path = File.join(Dir::tmpdir, 'mailcatcherdb')
+
+ActiveRecord::Base.configurations["db"] = { adapter: 'jdbcsqlite3', database: db_path, pool: 20 }
 
 class Message < ActiveRecord::Base
   establish_connection :db
