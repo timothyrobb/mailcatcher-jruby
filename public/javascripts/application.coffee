@@ -317,7 +317,8 @@ class MailCatcher
 
   subscribe: ->
     if WebSocket?
-      @subscribeWebSocket()
+      #Cam: Disable websocket, JRuby version server don't enable this feature
+      #@subscribeWebSocket()
     else
       @subscribePoll()
 

@@ -418,7 +418,8 @@
 
     MailCatcher.prototype.subscribe = function() {
       if (typeof WebSocket !== "undefined" && WebSocket !== null) {
-        return this.subscribeWebSocket();
+        // Cam: Disable websocket, JRuby version server don't enable this feature
+        //return this.subscribeWebSocket();
       } else {
         return this.subscribePoll();
       }

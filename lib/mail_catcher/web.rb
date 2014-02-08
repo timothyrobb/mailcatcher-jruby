@@ -11,6 +11,8 @@ class Sinatra::Request
 end
 
 class MailCatcher::Web < Sinatra::Base
+  use ActiveRecord::ConnectionAdapters::ConnectionManagement
+
   set :root, File.expand_path("#{__FILE__}/../../..")
   set :haml, :format => :html5
 
