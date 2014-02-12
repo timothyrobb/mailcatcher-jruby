@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/camsong/mailcatcher-jruby"
 
   s.files = Dir[
-    "README.md", "LICENSE", "VERSION",
+    "README.md", "LICENSE", "VERSION", "config.ru",
     "bin/*",
     "lib/**/*.rb",
     "public/favicon.ico",
